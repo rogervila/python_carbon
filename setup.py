@@ -17,7 +17,7 @@ setup(
     download_url='https://github.com/rogervila/python_carbon/archive/CURRENT_VERSION.tar.gz',
     keywords=['php nesbot carbon', 'php carbon'],
     install_requires=[
-        'python-dateutil>=2,<3'
+        'python-dateutil>=2'
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
