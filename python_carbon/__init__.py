@@ -218,7 +218,6 @@ class Carbon:
 
     def equalTo(self, carbon: 'Carbon') -> bool:
         return self._date.year == carbon.year \
-            and self._date.year == carbon.year \
             and self._date.month == carbon.month \
             and self._date.day == carbon.day \
             and self._date.hour == carbon.hour \
@@ -230,16 +229,16 @@ class Carbon:
         return not self.equalTo(carbon)
 
     def greaterThan(self, carbon: 'Carbon') -> bool:
-        self.getTimestamp() > carbon.getTimestamp()
+        return self.getTimestamp() > carbon.getTimestamp()
 
     def greaterThanOrEqualTo(self, carbon: 'Carbon') -> bool:
-        self.getTimestamp() >= carbon.getTimestamp()
+        return self.getTimestamp() >= carbon.getTimestamp()
 
     def lessThan(self, carbon: 'Carbon') -> bool:
-        self.getTimestamp() < carbon.getTimestamp()
+        return self.getTimestamp() < carbon.getTimestamp()
 
     def lessThanOrEqualTo(self, carbon: 'Carbon') -> bool:
-        self.getTimestamp() <= carbon.getTimestamp()
+        return self.getTimestamp() <= carbon.getTimestamp()
 
     def between(self, low: 'Carbon', high: 'Carbon', included: bool = True) -> bool:
         return self.betweenIncluded(low, high) if included else self.betweenExcluded(low, high)

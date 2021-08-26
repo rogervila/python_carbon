@@ -1,11 +1,11 @@
 import unittest
+from python_carbon import Carbon
 
 
 class test_python_carbon(unittest.TestCase):
     def test_todo(self):
         self.assertTrue(True)
 
-        '''
         print('\n----\nTEST\n----\n')
 
         dt = Carbon.parse('2021-08-16 01:02:03')
@@ -119,7 +119,6 @@ class test_python_carbon(unittest.TestCase):
         # print(dt.microseconds)
         # print(dt.micro)
 
-
         print(
             Carbon.now().difference(Carbon.parse('1992-04-17 17:00:00'))
         )
@@ -156,17 +155,12 @@ class test_python_carbon(unittest.TestCase):
             Carbon.now().diffIn('microseconds', Carbon.parse('1992-04-17 17:00:00'))
         )
 
-
         print(
             Carbon.utcnow().toCookieString()
         )
 
         print(
             Carbon.now().toISOString()
-        )
-
-        print(
-            datetime.now().timetuple()
         )
 
         print(
@@ -226,8 +220,6 @@ class test_python_carbon(unittest.TestCase):
         )
 
         print('\n---\nEND\n---\n')
-
-        '''
 
 
 if __name__ == '__main__':
