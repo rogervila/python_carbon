@@ -318,22 +318,25 @@ class Carbon:
     def add(self, amount: int, unit: str) -> 'Carbon':
         return self._add_or_sub('add', amount, unit)
 
-    def addSeconds(self, seconds: int) -> 'Carbon':
+    def addSeconds(self, seconds: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(seconds=seconds))
 
-    def addMinutes(self, minutes: int) -> 'Carbon':
+    def addMinutes(self, minutes: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(minutes=minutes))
 
-    def addHours(self, hours: int) -> 'Carbon':
+    def addHours(self, hours: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(hours=hours))
 
-    def addDays(self, days: int) -> 'Carbon':
+    def addDays(self, days: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(days=days))
 
-    def addWeeks(self, weeks: int) -> 'Carbon':
+    def addWeeks(self, weeks: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(weeks=weeks))
 
-    def addYears(self, years: int) -> 'Carbon':
+    def addMonths(self, months: int = 1) -> 'Carbon':
+        return Carbon(self._date + relativedelta(months=months))
+
+    def addYears(self, years: int = 1) -> 'Carbon':
         return Carbon(
             self.toDatetime().replace(year=(self.getYear() + years))
         )
@@ -341,22 +344,25 @@ class Carbon:
     def sub(self, amount: int, unit: str) -> 'Carbon':
         return self._add_or_sub('sub', amount, unit)
 
-    def subSeconds(self, seconds: int) -> 'Carbon':
+    def subSeconds(self, seconds: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(seconds=seconds))
 
-    def subMinutes(self, minutes: int) -> 'Carbon':
+    def subMinutes(self, minutes: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(minutes=minutes))
 
-    def subHours(self, hours: int) -> 'Carbon':
+    def subHours(self, hours: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(hours=hours))
 
-    def subDays(self, days: int) -> 'Carbon':
+    def subDays(self, days: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(days=days))
 
-    def subWeeks(self, weeks: int) -> 'Carbon':
+    def subWeeks(self, weeks: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(weeks=weeks))
 
-    def subYears(self, years: int) -> 'Carbon':
+    def subMonths(self, months: int = 1) -> 'Carbon':
+        return Carbon(self._date - relativedelta(months=months))
+
+    def subYears(self, years: int = 1) -> 'Carbon':
         return Carbon(
             self.toDatetime().replace(year=(self.getYear() - years))
         )
