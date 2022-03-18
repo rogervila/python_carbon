@@ -301,6 +301,12 @@ class Carbon:
     ##########
     # Checks #
     ##########
+    def isNextYear(self) -> bool:
+        return self._date.year == datetime.now().year + 1
+
+    def isLastYear(self) -> bool:
+        return self._date.year == datetime.now().year - 1
+
     def isFuture(self) -> bool:
         return self.getTimestamp() > datetime.now().timestamp()
 
