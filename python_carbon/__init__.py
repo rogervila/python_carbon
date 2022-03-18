@@ -307,6 +307,18 @@ class Carbon:
     def isLastYear(self) -> bool:
         return self._date.year == datetime.now().year - 1
 
+    def isNextMonth(self) -> bool:
+        return self._date.month == datetime.now().month + 1
+
+    def isLastMonth(self) -> bool:
+        return self._date.month == datetime.now().month - 1
+
+    def isStartOfDay(self) -> bool:
+        return self._date.hour == 0 and self._date.minute == 0 and self._date.second == 0
+
+    def isEndOfDay(self) -> bool:
+        return self._date.hour == 23 and self._date.minute == 59 and self._date.second == 59
+
     def isFuture(self) -> bool:
         return self.getTimestamp() > datetime.now().timestamp()
 
