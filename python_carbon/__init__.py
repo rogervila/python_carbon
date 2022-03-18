@@ -6,16 +6,17 @@ from dateutil.parser import parse as date_parser
 from dateutil.relativedelta import relativedelta
 from dateutil.tz import tzutc
 
-MONDAY = 0
-TUESDAY = 1
-WEDNESDAY = 2
-THURSDAY = 3
-FRIDAY = 4
-SATURDAY = 5
-SUNDAY = 6
-
 
 class Carbon:
+
+    MONDAY = 0
+    TUESDAY = 1
+    WEDNESDAY = 2
+    THURSDAY = 3
+    FRIDAY = 4
+    SATURDAY = 5
+    SUNDAY = 6
+
     def __init__(self, now: Union['Carbon', datetime, None] = None):
         self._date = None  # type: datetime
 
@@ -173,6 +174,9 @@ class Carbon:
     def setMonth(self, month: int) -> 'Carbon':
         return Carbon(self._date.replace(month=month))
 
+    def setDay(self, day: int) -> 'Carbon':
+        return Carbon(self._date.replace(day=day))
+
     def setHour(self, hour: int) -> 'Carbon':
         return Carbon(self._date.replace(hour=hour))
 
@@ -181,6 +185,9 @@ class Carbon:
 
     def setSecond(self, second: int) -> 'Carbon':
         return Carbon(self._date.replace(second=second))
+
+    def setMicroSecond(self, microsecond: int) -> 'Carbon':
+        return Carbon(self._date.replace(microsecond=microsecond))
 
     ##############
     # Formatting #
@@ -295,17 +302,41 @@ class Carbon:
     # Checks #
     ##########
 
+    def isMonday(self) -> bool:
+        return self._date.weekday() == self.MONDAY
+
+    def isTuesday(self) -> bool:
+        return self._date.weekday() == self.TUESDAY
+
+    def isWednesday(self) -> bool:
+        return self._date.weekday() == self.WEDNESDAY
+
+    def isThursday(self) -> bool:
+        return self._date.weekday() == self.THURSDAY
+
+    def isFriday(self) -> bool:
+        return self._date.weekday() == self.FRIDAY
+
+    def isSaturday(self) -> bool:
+        return self._date.weekday() == self.SATURDAY
+
+    def isSunday(self) -> bool:
+        return self._date.weekday() == self.SUNDAY
+
     def isLeapYear(self) -> bool:
         return isleap(self.getYear())
 
     def isWeekend(self) -> bool:
-        return self._date.weekday() in [SATURDAY, SUNDAY]
+        return self._date.weekday() in [self.SATURDAY, self.SUNDAY]
 
     def isDayOfWeek(self, weekday: int) -> bool:
         return self._date.weekday() == weekday
 
     def isLastDayOfMonth(self) -> bool:
         return self.getDay() == monthrange(self.getDay(), self.getMonth())[1]
+
+    def isFirstDayOfMonth(self) -> bool:
+        return self.getDay() == 1
 
     ############################
     # Addition and Subtraction #
@@ -317,6 +348,9 @@ class Carbon:
 
     def add(self, amount: int, unit: str) -> 'Carbon':
         return self._add_or_sub('add', amount, unit)
+
+    def addMicroSeconds(self, microseconds: int = 1) -> 'Carbon':
+        return Carbon(self._date + timedelta(microseconds=microseconds))
 
     def addSeconds(self, seconds: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(seconds=seconds))
@@ -337,12 +371,13 @@ class Carbon:
         return Carbon(self._date + relativedelta(months=months))
 
     def addYears(self, years: int = 1) -> 'Carbon':
-        return Carbon(
-            self.toDatetime().replace(year=(self.getYear() + years))
-        )
+        return Carbon(self._date + relativedelta(years=years))
 
     def sub(self, amount: int, unit: str) -> 'Carbon':
         return self._add_or_sub('sub', amount, unit)
+
+    def subMicroSeconds(self, microseconds: int = 1) -> 'Carbon':
+        return Carbon(self._date - timedelta(microseconds=microseconds))
 
     def subSeconds(self, seconds: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(seconds=seconds))
@@ -363,9 +398,7 @@ class Carbon:
         return Carbon(self._date - relativedelta(months=months))
 
     def subYears(self, years: int = 1) -> 'Carbon':
-        return Carbon(
-            self.toDatetime().replace(year=(self.getYear() - years))
-        )
+        return Carbon(self._date - relativedelta(years=years))
 
     ##############
     # Difference #

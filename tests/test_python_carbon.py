@@ -8,6 +8,9 @@ class test_python_carbon(unittest.TestCase):
 
         print('\n----\nTEST\n----\n')
 
+        print(Carbon.now().addYears(2).toDateString())
+        exit()
+
         dt = Carbon.parse('2021-08-16 01:02:03')
         dt2 = Carbon.parse('2021-08-16 01:02:03')
 
