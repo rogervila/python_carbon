@@ -301,6 +301,11 @@ class Carbon:
     ##########
     # Checks #
     ##########
+    def isFuture(self) -> bool:
+        return self.getTimestamp() > datetime.now().timestamp()
+
+    def isPast(self) -> bool:
+        return self.getTimestamp() < datetime.now().timestamp()
 
     def isMonday(self) -> bool:
         return self._date.weekday() == self.MONDAY
