@@ -615,6 +615,10 @@ class Carbon:
             )
         )
 
+    def next(self, weekday: int = None) -> 'Carbon':
+        weekday = weekday if weekday is not None else datetime.now().weekday()
+        return Carbon(self._date + timedelta(days=weekday - self._date.weekday() + 7))
+
     ##########################
     # datetime and timedelta #
     ##########################
