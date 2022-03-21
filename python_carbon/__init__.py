@@ -6,16 +6,17 @@ from dateutil.parser import parse as date_parser
 from dateutil.relativedelta import relativedelta
 from dateutil.tz import tzutc
 
-MONDAY = 0
-TUESDAY = 1
-WEDNESDAY = 2
-THURSDAY = 3
-FRIDAY = 4
-SATURDAY = 5
-SUNDAY = 6
-
 
 class Carbon:
+
+    MONDAY = 0
+    TUESDAY = 1
+    WEDNESDAY = 2
+    THURSDAY = 3
+    FRIDAY = 4
+    SATURDAY = 5
+    SUNDAY = 6
+
     def __init__(self, now: Union['Carbon', datetime, None] = None):
         self._date = None  # type: datetime
 
@@ -68,6 +69,10 @@ class Carbon:
     @staticmethod
     def createFromFormat(format_string: str, date_string: str) -> 'Carbon':
         return Carbon(datetime.strptime(date_string, format_string))
+
+    @staticmethod
+    def createFromTimestamp(timestamp: int) -> 'Carbon':
+        return Carbon(datetime.fromtimestamp(timestamp))
 
     ##############
     # Properties #
@@ -173,6 +178,9 @@ class Carbon:
     def setMonth(self, month: int) -> 'Carbon':
         return Carbon(self._date.replace(month=month))
 
+    def setDay(self, day: int) -> 'Carbon':
+        return Carbon(self._date.replace(day=day))
+
     def setHour(self, hour: int) -> 'Carbon':
         return Carbon(self._date.replace(hour=hour))
 
@@ -181,6 +189,9 @@ class Carbon:
 
     def setSecond(self, second: int) -> 'Carbon':
         return Carbon(self._date.replace(second=second))
+
+    def setMicroSecond(self, microsecond: int) -> 'Carbon':
+        return Carbon(self._date.replace(microsecond=microsecond))
 
     ##############
     # Formatting #
@@ -294,18 +305,65 @@ class Carbon:
     ##########
     # Checks #
     ##########
+    def isNextYear(self) -> bool:
+        return self._date.year == datetime.now().year + 1
+
+    def isLastYear(self) -> bool:
+        return self._date.year == datetime.now().year - 1
+
+    def isNextMonth(self) -> bool:
+        return self._date.month == datetime.now().month + 1
+
+    def isLastMonth(self) -> bool:
+        return self._date.month == datetime.now().month - 1
+
+    def isStartOfDay(self) -> bool:
+        return self._date.hour == 0 and self._date.minute == 0 and self._date.second == 0
+
+    def isEndOfDay(self) -> bool:
+        return self._date.hour == 23 and self._date.minute == 59 and self._date.second == 59
+
+    def isFuture(self) -> bool:
+        return self.getTimestamp() > datetime.now().timestamp()
+
+    def isPast(self) -> bool:
+        return self.getTimestamp() < datetime.now().timestamp()
+
+    def isMonday(self) -> bool:
+        return self._date.weekday() == self.MONDAY
+
+    def isTuesday(self) -> bool:
+        return self._date.weekday() == self.TUESDAY
+
+    def isWednesday(self) -> bool:
+        return self._date.weekday() == self.WEDNESDAY
+
+    def isThursday(self) -> bool:
+        return self._date.weekday() == self.THURSDAY
+
+    def isFriday(self) -> bool:
+        return self._date.weekday() == self.FRIDAY
+
+    def isSaturday(self) -> bool:
+        return self._date.weekday() == self.SATURDAY
+
+    def isSunday(self) -> bool:
+        return self._date.weekday() == self.SUNDAY
 
     def isLeapYear(self) -> bool:
         return isleap(self.getYear())
 
     def isWeekend(self) -> bool:
-        return self._date.weekday() in [SATURDAY, SUNDAY]
+        return self._date.weekday() in [self.SATURDAY, self.SUNDAY]
 
     def isDayOfWeek(self, weekday: int) -> bool:
         return self._date.weekday() == weekday
 
     def isLastDayOfMonth(self) -> bool:
         return self.getDay() == monthrange(self.getDay(), self.getMonth())[1]
+
+    def isFirstDayOfMonth(self) -> bool:
+        return self.getDay() == 1
 
     ############################
     # Addition and Subtraction #
@@ -318,48 +376,56 @@ class Carbon:
     def add(self, amount: int, unit: str) -> 'Carbon':
         return self._add_or_sub('add', amount, unit)
 
-    def addSeconds(self, seconds: int) -> 'Carbon':
+    def addMicroSeconds(self, microseconds: int = 1) -> 'Carbon':
+        return Carbon(self._date + timedelta(microseconds=microseconds))
+
+    def addSeconds(self, seconds: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(seconds=seconds))
 
-    def addMinutes(self, minutes: int) -> 'Carbon':
+    def addMinutes(self, minutes: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(minutes=minutes))
 
-    def addHours(self, hours: int) -> 'Carbon':
+    def addHours(self, hours: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(hours=hours))
 
-    def addDays(self, days: int) -> 'Carbon':
+    def addDays(self, days: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(days=days))
 
-    def addWeeks(self, weeks: int) -> 'Carbon':
+    def addWeeks(self, weeks: int = 1) -> 'Carbon':
         return Carbon(self._date + timedelta(weeks=weeks))
 
-    def addYears(self, years: int) -> 'Carbon':
-        return Carbon(
-            self.toDatetime().replace(year=(self.getYear() + years))
-        )
+    def addMonths(self, months: int = 1) -> 'Carbon':
+        return Carbon(self._date + relativedelta(months=months))
+
+    def addYears(self, years: int = 1) -> 'Carbon':
+        return Carbon(self._date + relativedelta(years=years))
 
     def sub(self, amount: int, unit: str) -> 'Carbon':
         return self._add_or_sub('sub', amount, unit)
 
-    def subSeconds(self, seconds: int) -> 'Carbon':
+    def subMicroSeconds(self, microseconds: int = 1) -> 'Carbon':
+        return Carbon(self._date - timedelta(microseconds=microseconds))
+
+    def subSeconds(self, seconds: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(seconds=seconds))
 
-    def subMinutes(self, minutes: int) -> 'Carbon':
+    def subMinutes(self, minutes: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(minutes=minutes))
 
-    def subHours(self, hours: int) -> 'Carbon':
+    def subHours(self, hours: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(hours=hours))
 
-    def subDays(self, days: int) -> 'Carbon':
+    def subDays(self, days: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(days=days))
 
-    def subWeeks(self, weeks: int) -> 'Carbon':
+    def subWeeks(self, weeks: int = 1) -> 'Carbon':
         return Carbon(self._date - timedelta(weeks=weeks))
 
-    def subYears(self, years: int) -> 'Carbon':
-        return Carbon(
-            self.toDatetime().replace(year=(self.getYear() - years))
-        )
+    def subMonths(self, months: int = 1) -> 'Carbon':
+        return Carbon(self._date - relativedelta(months=months))
+
+    def subYears(self, years: int = 1) -> 'Carbon':
+        return Carbon(self._date - relativedelta(years=years))
 
     ##############
     # Difference #
@@ -552,6 +618,10 @@ class Carbon:
                 microsecond=999999
             )
         )
+
+    def next(self, weekday: int = None) -> 'Carbon':
+        weekday = weekday if weekday is not None else datetime.now().weekday()
+        return Carbon(self._date + timedelta(days=weekday - self._date.weekday() + 7))
 
     ##########################
     # datetime and timedelta #
