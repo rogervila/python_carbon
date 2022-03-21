@@ -68,7 +68,7 @@ class Carbon:
 
     @staticmethod
     def createFromFormat(format_string: str, date_string: str) -> 'Carbon':
-        return Carbon(datetime.strptime(date_string, format_string))    \
+        return Carbon(datetime.strptime(date_string, format_string))
 
     @staticmethod
     def createFromTimestamp(timestamp: int) -> 'Carbon':
