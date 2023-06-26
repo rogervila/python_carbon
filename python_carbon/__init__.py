@@ -575,7 +575,7 @@ class Carbon:
 
     def startOfMonth(self) -> 'Carbon':
         return Carbon(
-            self.startOfWeek().addDays(6).toDatetime().replace(
+            self.now().toDatetime().replace(
                 day=1,
                 hour=0,
                 minute=0,
@@ -586,7 +586,7 @@ class Carbon:
 
     def endOfMonth(self) -> 'Carbon':
         return Carbon(
-            self.startOfWeek().addDays(6).toDatetime().replace(
+            self.now().toDatetime().replace(
                 day=self.getDaysInMonth(),
                 hour=23,
                 minute=59,
@@ -597,7 +597,7 @@ class Carbon:
 
     def startOfYear(self) -> 'Carbon':
         return Carbon(
-            self.startOfWeek().addDays(6).toDatetime().replace(
+            self.now().toDatetime().replace(
                 month=1,
                 day=1,
                 hour=0,
@@ -609,7 +609,7 @@ class Carbon:
 
     def endOfYear(self) -> 'Carbon':
         return Carbon(
-            self.startOfWeek().addDays(6).toDatetime().replace(
+            self.now().toDatetime().replace(
                 month=12,
                 day=31,
                 hour=23,
