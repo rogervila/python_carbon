@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name='python_carbon',
     packages=['python_carbon'],
-    version='CURRENT_VERSION',
+    version='0.2.0',
     license='MIT',
     description='PHP Carbon library adapted for python',
     long_description=long_description,
