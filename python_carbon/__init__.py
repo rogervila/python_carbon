@@ -471,13 +471,16 @@ class Carbon:
 
     # TODO: Difference for humans
 
-    #############
-    # Modifiers #
-    #############
+    ##############
+    # Converters #
+    ##############
 
     def utc(self) -> 'Carbon':
         return Carbon(self._date.astimezone(tzutc()))
 
+    #############
+    # Modifiers #
+    #############
     def _start_or_end(self, prefix: str, unit: str) -> 'Carbon':
         method = getattr(self, (prefix + 'Of' + unit.capitalize()))
         return method()
