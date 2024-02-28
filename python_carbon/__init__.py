@@ -475,6 +475,9 @@ class Carbon:
     # Modifiers #
     #############
 
+    def utc(self) -> 'Carbon':
+        return Carbon(self._date.astimezone(tzutc()))
+
     def _start_or_end(self, prefix: str, unit: str) -> 'Carbon':
         method = getattr(self, (prefix + 'Of' + unit.capitalize()))
         return method()
