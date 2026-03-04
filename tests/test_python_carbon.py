@@ -63,6 +63,18 @@ class test_python_carbon(unittest.TestCase):
         self.assertEqual(end_of_hour.second, 59)
         self.assertEqual(end_of_hour.microsecond, 999999)
 
+    def test_start_end_week_and_year_exact_values(self) -> None:
+        dt = Carbon.parse('2021-08-18 14:15:16.123456')
+
+        self.assertEqual(dt.startOfWeek().toDateTimeString(with_milliseconds=True), '2021-08-16 00:00:00.000000')
+        self.assertEqual(dt.endOfWeek().toDateTimeString(with_milliseconds=True), '2021-08-22 23:59:59.999999')
+        self.assertEqual(dt.startOfYear().toDateTimeString(with_milliseconds=True), '2021-01-01 00:00:00.000000')
+        self.assertEqual(dt.endOfYear().toDateTimeString(with_milliseconds=True), '2021-12-31 23:59:59.999999')
+
+        sunday = Carbon.parse('2021-08-22 10:00:00')
+        self.assertEqual(sunday.startOfWeek().toDateTimeString(), '2021-08-16 00:00:00')
+        self.assertEqual(sunday.endOfWeek().toDateTimeString(), '2021-08-22 23:59:59')
+
     def test_add_sub_and_last_day_of_month(self) -> None:
         self.assertTrue(Carbon.parse('2021-08-31').isLastDayOfMonth())
 
