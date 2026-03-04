@@ -471,6 +471,13 @@ class Carbon:
 
     # TODO: Difference for humans
 
+    ##############
+    # Converters #
+    ##############
+
+    def utc(self) -> 'Carbon':
+        return Carbon(self._date.astimezone(tzutc()))
+
     #############
     # Modifiers #
     #############

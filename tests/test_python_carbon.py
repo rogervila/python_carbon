@@ -4,18 +4,20 @@ from python_carbon import Carbon
 
 
 class test_python_carbon(unittest.TestCase):
-    def test_carbon_methods(self) -> None:
+    def test_parse_and_equality(self) -> None:
         dt = Carbon.parse('2021-08-16 01:02:03')
         dt2 = Carbon.parse('2021-08-16 01:02:03')
 
         self.assertTrue(dt.equalTo(dt2))
 
+    def test_instantiation_now_and_constructor(self) -> None:
         dt = Carbon.now()
         self.assertIsInstance(dt, Carbon)
 
         dt = Carbon()  # equivalent to Carbon.now()
         self.assertIsInstance(dt, Carbon)
 
+    def test_create_format_and_getters(self) -> None:
         dt = Carbon.createFromFormat('%Y-%m-%d', '2021-08-18')
         self.assertEqual(dt.format('%Y-%m-%d'), '2021-08-18')
 
@@ -29,6 +31,7 @@ class test_python_carbon(unittest.TestCase):
         self.assertEqual(dt.micro, 0)
         self.assertIsInstance(dt.timestamp, float)
 
+    def test_start_and_end_methods(self) -> None:
         dt = Carbon.now()
 
         start_of_week = dt.startOfWeek()
@@ -60,6 +63,7 @@ class test_python_carbon(unittest.TestCase):
         self.assertEqual(end_of_hour.second, 59)
         self.assertEqual(end_of_hour.microsecond, 999999)
 
+    def test_add_sub_and_last_day_of_month(self) -> None:
         self.assertTrue(Carbon.parse('2021-08-31').isLastDayOfMonth())
 
         anchor = Carbon.now()
@@ -68,6 +72,7 @@ class test_python_carbon(unittest.TestCase):
 
         self.assertIsInstance(Carbon.timedelta(days=1), timedelta)
 
+    def test_difference_and_diffin_methods(self) -> None:
         reference = Carbon.parse('1992-04-17 17:00:00')
         now = Carbon.now()
 
@@ -95,6 +100,7 @@ class test_python_carbon(unittest.TestCase):
         self.assertEqual(diff_seconds, diff_minutes * 60)
         self.assertEqual(diff_microseconds, diff_seconds * 1000)
 
+    def test_cookie_iso_and_calendar_methods(self) -> None:
         cookie_string = Carbon.utcnow().toCookieString()
         self.assertIsInstance(cookie_string, str)
         self.assertIn('UTC', cookie_string)
@@ -109,6 +115,7 @@ class test_python_carbon(unittest.TestCase):
         week_of_month = Carbon.now().getWeekOfMonth()
         self.assertIn(week_of_month, range(0, 7))
 
+    def test_start_end_of_month_year_and_quarters(self) -> None:
         start_of_month = Carbon.now().startOfMonth()
         end_of_month = Carbon.now().endOfMonth()
         start_of_year = Carbon.now().startOfYear()
@@ -125,13 +132,23 @@ class test_python_carbon(unittest.TestCase):
         self.assertTrue(all(len(q) == 3 for q in quarters))
         self.assertIn(quarter, range(0, 4))
 
+    def test_between_included_and_excluded(self) -> None:
         current = Carbon.now()
         yesterday = Carbon.yesterday()
         tomorrow = Carbon.tomorrow()
+
         self.assertTrue(current.betweenIncluded(yesterday, tomorrow))
         self.assertTrue(current.betweenExcluded(yesterday, tomorrow))
         self.assertTrue(yesterday.betweenIncluded(yesterday, tomorrow))
         self.assertFalse(yesterday.betweenExcluded(yesterday, tomorrow))
+
+    def test_utc_converter(self) -> None:
+        local_with_offset = Carbon.parse('2021-08-18T10:00:00+02:00')
+        converted = local_with_offset.utc()
+
+        self.assertIsInstance(converted, Carbon)
+        self.assertEqual(converted.toDatetime().tzname(), 'UTC')
+        self.assertEqual(converted.toDateTimeString(), '2021-08-18 08:00:00')
 
 
 if __name__ == '__main__':
