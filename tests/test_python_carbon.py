@@ -186,6 +186,25 @@ class test_python_carbon(unittest.TestCase):
         self.assertEqual(converted.toDatetime().tzname(), 'UTC')
         self.assertEqual(converted.toDateTimeString(), '2021-08-18 08:00:00')
 
+    def test_next_weekday_methods(self) -> None:
+        base = Carbon.parse('2021-08-18 12:34:56')
+
+        self.assertEqual(base.nextMonday().toDateTimeString(), '2021-08-23 12:34:56')
+        self.assertEqual(base.nextTuesday().toDateTimeString(), '2021-08-24 12:34:56')
+        self.assertEqual(base.nextWednesday().toDateTimeString(), '2021-08-25 12:34:56')
+        self.assertEqual(base.nextThursday().toDateTimeString(), '2021-08-26 12:34:56')
+        self.assertEqual(base.nextFriday().toDateTimeString(), '2021-08-27 12:34:56')
+        self.assertEqual(base.nextSaturday().toDateTimeString(), '2021-08-28 12:34:56')
+        self.assertEqual(base.nextSunday().toDateTimeString(), '2021-08-29 12:34:56')
+
+        self.assertTrue(base.nextMonday().equalTo(base.next(Carbon.MONDAY)))
+        self.assertTrue(base.nextTuesday().equalTo(base.next(Carbon.TUESDAY)))
+        self.assertTrue(base.nextWednesday().equalTo(base.next(Carbon.WEDNESDAY)))
+        self.assertTrue(base.nextThursday().equalTo(base.next(Carbon.THURSDAY)))
+        self.assertTrue(base.nextFriday().equalTo(base.next(Carbon.FRIDAY)))
+        self.assertTrue(base.nextSaturday().equalTo(base.next(Carbon.SATURDAY)))
+        self.assertTrue(base.nextSunday().equalTo(base.next(Carbon.SUNDAY)))
+
 
 if __name__ == '__main__':
     unittest.main()
