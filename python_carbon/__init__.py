@@ -441,19 +441,19 @@ class Carbon:
         return method(carbon)
 
     def diffInMicroseconds(self, carbon: 'Carbon') -> int:
-        return self.diffInSeconds(carbon) * 1000
+        return int(round((self._date - carbon.toDatetime()).total_seconds() * 1_000_000))
 
-    def diffInSeconds(self, carbon: 'Carbon') -> int:
-        return self.diffInMinutes(carbon) * 60
+    def diffInSeconds(self, carbon: 'Carbon') -> float:
+        return (self._date - carbon.toDatetime()).total_seconds()
 
-    def diffInMinutes(self, carbon: 'Carbon') -> int:
-        return self.diffInHours(carbon) * 60
+    def diffInMinutes(self, carbon: 'Carbon') -> float:
+        return self.diffInSeconds(carbon) / 60
 
-    def diffInHours(self, carbon: 'Carbon') -> int:
-        return self.diffInDays(carbon) * 24
+    def diffInHours(self, carbon: 'Carbon') -> float:
+        return self.diffInSeconds(carbon) / 3600
 
-    def diffInDays(self, carbon: 'Carbon') -> int:
-        return (self._date - carbon.toDatetime()).days
+    def diffInDays(self, carbon: 'Carbon') -> float:
+        return self.diffInSeconds(carbon) / 86400
 
     def diffInWeeks(self, carbon: 'Carbon') -> float:
         return self.diffInDays(carbon) / 7

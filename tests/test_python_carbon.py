@@ -1,5 +1,5 @@
 import unittest
-from datetime import timedelta
+from datetime import datetime, timedelta
 from python_carbon import Carbon
 
 
@@ -85,32 +85,56 @@ class test_python_carbon(unittest.TestCase):
         self.assertIsInstance(Carbon.timedelta(days=1), timedelta)
 
     def test_difference_and_diffin_methods(self) -> None:
-        reference = Carbon.parse('1992-04-17 17:00:00')
-        now = Carbon.now()
+        earlier = Carbon.parse('2021-01-01 00:00:00.000000')
+        later = Carbon.parse('2022-03-04 05:06:07.123456')
 
-        diff = now.difference(reference)
+        diff = later.difference(earlier)
         self.assertIsInstance(diff, dict)
         self.assertEqual(
             set(diff.keys()),
             {'years', 'months', 'days', 'leapdays', 'hours', 'minutes', 'seconds', 'microseconds'}
         )
+        self.assertEqual(diff['years'], 1)
+        self.assertEqual(diff['months'], 2)
+        self.assertEqual(diff['days'], 3)
+        self.assertEqual(diff['hours'], 5)
+        self.assertEqual(diff['minutes'], 6)
+        self.assertEqual(diff['seconds'], 7)
+        self.assertEqual(diff['microseconds'], 123456)
 
-        diff_years = now.diffIn('years', reference)
-        diff_months = now.diffIn('months', reference)
-        diff_weeks = now.diffIn('weeks', reference)
-        diff_days = now.diffIn('days', reference)
-        diff_hours = now.diffIn('hours', reference)
-        diff_minutes = now.diffIn('minutes', reference)
-        diff_seconds = now.diffIn('seconds', reference)
-        diff_microseconds = now.diffIn('microseconds', reference)
+        expected_seconds = (datetime(2022, 3, 4, 5, 6, 7, 123456) - datetime(2021, 1, 1, 0, 0, 0, 0)).total_seconds()
+        expected_minutes = expected_seconds / 60
+        expected_hours = expected_seconds / 3600
+        expected_days = expected_seconds / 86400
+        expected_weeks = expected_days / 7
+        expected_microseconds = int(round(expected_seconds * 1_000_000))
 
-        self.assertGreater(diff_years, 0)
-        self.assertEqual(diff_months, now.difference(reference)['months'] + diff_years * 12)
-        self.assertEqual(diff_weeks, diff_days / 7)
-        self.assertEqual(diff_hours, diff_days * 24)
-        self.assertEqual(diff_minutes, diff_hours * 60)
-        self.assertEqual(diff_seconds, diff_minutes * 60)
-        self.assertEqual(diff_microseconds, diff_seconds * 1000)
+        diff_years = later.diffIn('years', earlier)
+        diff_months = later.diffIn('months', earlier)
+        diff_weeks = later.diffIn('weeks', earlier)
+        diff_days = later.diffIn('days', earlier)
+        diff_hours = later.diffIn('hours', earlier)
+        diff_minutes = later.diffIn('minutes', earlier)
+        diff_seconds = later.diffIn('seconds', earlier)
+        diff_microseconds = later.diffIn('microseconds', earlier)
+
+        self.assertIsInstance(diff_years, int)
+        self.assertIsInstance(diff_months, int)
+        self.assertIsInstance(diff_weeks, float)
+        self.assertIsInstance(diff_days, float)
+        self.assertIsInstance(diff_hours, float)
+        self.assertIsInstance(diff_minutes, float)
+        self.assertIsInstance(diff_seconds, float)
+        self.assertIsInstance(diff_microseconds, int)
+
+        self.assertEqual(diff_years, 1)
+        self.assertEqual(diff_months, 14)
+        self.assertAlmostEqual(diff_weeks, expected_weeks, places=12)
+        self.assertAlmostEqual(diff_days, expected_days, places=12)
+        self.assertAlmostEqual(diff_hours, expected_hours, places=12)
+        self.assertAlmostEqual(diff_minutes, expected_minutes, places=12)
+        self.assertAlmostEqual(diff_seconds, expected_seconds, places=12)
+        self.assertEqual(diff_microseconds, expected_microseconds)
 
     def test_cookie_iso_and_calendar_methods(self) -> None:
         cookie_string = Carbon.utcnow().toCookieString()
