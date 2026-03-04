@@ -471,6 +471,13 @@ class Carbon:
 
     # TODO: Difference for humans
 
+    ##############
+    # Converters #
+    ##############
+
+    def utc(self) -> 'Carbon':
+        return Carbon(self._date.astimezone(tzutc()))
+
     #############
     # Modifiers #
     #############
@@ -554,8 +561,10 @@ class Carbon:
         )
 
     def startOfWeek(self) -> 'Carbon':
+        start_of_week = self._date - timedelta(days=self._date.weekday())
+
         return Carbon(
-            (self._date - timedelta(days=self._date.weekday())).replace(
+            start_of_week.replace(
                 hour=0,
                 minute=0,
                 second=0,
@@ -564,8 +573,10 @@ class Carbon:
         )
 
     def endOfWeek(self) -> 'Carbon':
+        end_of_week = self.startOfWeek().toDatetime() + timedelta(days=6)
+
         return Carbon(
-            self.startOfWeek().addDays(6).toDatetime().replace(
+            end_of_week.replace(
                 hour=23,
                 minute=59,
                 second=59,
@@ -597,7 +608,7 @@ class Carbon:
 
     def startOfYear(self) -> 'Carbon':
         return Carbon(
-            self.startOfWeek().addDays(6).toDatetime().replace(
+            self._date.replace(
                 month=1,
                 day=1,
                 hour=0,
@@ -609,7 +620,7 @@ class Carbon:
 
     def endOfYear(self) -> 'Carbon':
         return Carbon(
-            self.startOfWeek().addDays(6).toDatetime().replace(
+            self._date.replace(
                 month=12,
                 day=31,
                 hour=23,
